@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".MainActivity">
+
+        <cn.onlyloveyd.slidetoggleview.shimmer.ShimmerTextView
+            android:id="@+id/shimmerTextView"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:paddingHorizontal="10dp"
+            android:text="一闪一闪亮晶晶"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="2000"
+            android:layout_width="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_height="40dp"/>
+
+
+        <cn.onlyloveyd.slidetoggleview.SlideToggleView
+            android:id="@+id/slideToggleView"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/slide_bg"
+            app:stv_blockBottomMargin="2dp"
+            app:stv_blockLeftMargin="2dp"
+            app:stv_blockRightMargin="2dp"
+            app:stv_blockTopMargin="3dp"
+            app:stv_remain="80dp"
+            app:stv_slideBlock="@drawable/slide_block"
+            app:stv_text="Slide To Unlock"/>
+
+        <cn.onlyloveyd.slidetoggleview.SlideToggleView
+            android:id="@+id/slideToggleView2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            app:stv_blockBottomMargin="2dp"
+            app:stv_blockLeftMargin="2dp"
+            app:stv_blockRightMargin="2dp"
+            app:stv_blockTopMargin="2dp"
+            app:stv_remain="80dp"
+            android:background="@drawable/slide_rect_bg"
+            app:stv_slideBlock="@drawable/slide_two"
+            app:stv_text="滑块2"
+        />
+
+        <cn.onlyloveyd.slidetoggleview.SlideToggleView
+            android:id="@+id/slideToggleView3"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="40dp"
+            app:stv_blockBottomMargin="0dp"
+            app:stv_blockLeftMargin="0dp"
+            app:stv_blockRightMargin="0dp"
+            app:stv_blockTopMargin="0dp"
+            app:stv_remain="60dp"
+            android:background="@color/colorAccent"
+            app:stv_slideBlock="@drawable/slide_three"
+            app:stv_text="滑块3"
+        />
+
+
+
+    </LinearLayout>
+</layout>
