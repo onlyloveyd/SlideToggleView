@@ -117,8 +117,4 @@ public class ShimmerTextView extends AppCompatTextView {
     protected boolean verifyDrawable(@NonNull Drawable who) {
         return super.verifyDrawable(who) || who == mShimmerDrawable;
     }
-
-    public void getShimmer(){
-
-    }
 }
