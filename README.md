@@ -72,6 +72,7 @@ dependencies {
 
 ## Basic Result
 ![slidetoggleview](/screenshots/slidetoggleview.gif)
+![slidetoggleview](/screenshots/hd.gif)
 
 
 
