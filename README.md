@@ -70,9 +70,7 @@ dependencies {
 |stv_remain|滑块打开误差范围值|
 
 ## Basic Result
-![slidetoggleview](/screenshots/slidetoggleview.gif)
 <img src="/screenshots/hd.gif" width="320" alt="抽奖"/>
-![slidetoggleview](/screenshots/hd.gif)
 
 
 
