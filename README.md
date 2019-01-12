@@ -57,6 +57,19 @@ dependencies {
         });
 ```
 
+## Attributes
+|Attribute|Usage|
+|--|--|
+|stv_text|居中文字内容|
+|stv_textSize|居中文字大小|
+|stv_textColor|居中文字颜色|
+|stv_slideBlock|滑块图片|
+|stv_blockLeftMargin|滑块左间距|
+|stv_blockRightMargin|滑块左间距|
+|stv_blockTopMargin|滑块顶部间距|
+|stv_blockBottomMargin|滑块底部间距|
+|stv_remain|滑块打开误差范围值|
+
 ## Basic Result
 ![slidetoggleview](/screenshots/slidetoggleview.gif)
 
