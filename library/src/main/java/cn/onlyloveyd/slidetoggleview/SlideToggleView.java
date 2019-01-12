@@ -14,10 +14,8 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import cn.onlyloveyd.slidetoggleview.ext.DisplayUtils;
-import cn.onlyloveyd.slidetoggleview.shimmer.ShimmerFrameLayout;
 import cn.onlyloveyd.slidetoggleview.shimmer.ShimmerTextView;
 
 /**
@@ -52,8 +50,76 @@ public class SlideToggleView extends FrameLayout {
      */
     private int mRemainDistance;
 
-    private SlideToggleListener mSlideToggleListener;
 
+    private SlideToggleListener mSlideToggleListener;
+    private ViewDragHelper.Callback mDragCallback = new ViewDragHelper.Callback() {
+        @Override
+        public boolean tryCaptureView(@NonNull View view, int i) {
+            return view == mBlockView;
+        }
+
+        @Override
+        public void onViewCaptured(@NonNull View capturedChild, int activePointerId) {
+            ViewParent parent = capturedChild.getParent();
+            if (parent != null) {
+                parent.requestDisallowInterceptTouchEvent(true);
+            }
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(@NonNull View child, int left, int dx) {
+            int min = getPaddingLeft() + mBlockLeftMargin;
+            if (left < min) {
+                left = min;
+            }
+            int max = getMeasuredWidth() - getPaddingRight() - mBlockRightMargin
+                    - mBlockView.getMeasuredWidth();
+            if (left > max) {
+                left = max;
+            }
+            return left;
+        }
+
+        @Override
+        public int clampViewPositionVertical(@NonNull View child, int top, int dy) {
+            return getPaddingTop() + mBlockTopMargin;
+        }
+
+        @Override
+        public void onViewPositionChanged(@NonNull View changedView, int left, int top, int dx,
+                                          int dy) {
+            if (mSlideToggleListener != null) {
+                int total =
+                        getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - mBlockLeftMargin
+                                - mBlockRightMargin - mBlockView.getMeasuredWidth();
+                int slide = left - getPaddingLeft() - mBlockLeftMargin;
+                mSlideToggleListener.onBlockPositionChanged(SlideToggleView.this, left, total,
+                        slide);
+            }
+        }
+
+        @Override
+        public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
+            if (releasedChild == mBlockView) {
+                int total =
+                        getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - mBlockLeftMargin
+                                - mBlockRightMargin - mBlockView.getMeasuredWidth();
+                int slide = releasedChild.getLeft() - getPaddingLeft() - mBlockLeftMargin;
+                if (total - slide <= mRemainDistance) {
+                    openToggle();
+
+                    if (mSlideToggleListener != null) {
+                        mSlideToggleListener.onSlideOpen(SlideToggleView.this);
+                    }
+                } else {
+                    int finalLeft = getPaddingLeft() + mBlockLeftMargin;
+                    int finalTop = getPaddingTop() + mBlockTopMargin;
+                    mViewDragHelper.settleCapturedViewAt(finalLeft, finalTop);
+                    invalidate();
+                }
+            }
+        }
+    };
 
     public SlideToggleView(@NonNull Context context) {
         this(context, null);
@@ -64,7 +130,7 @@ public class SlideToggleView extends FrameLayout {
     }
 
     public SlideToggleView(@NonNull Context context, @Nullable AttributeSet attrs,
-            int defStyleAttr) {
+                           int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initView(context, attrs, defStyleAttr);
         mViewDragHelper = ViewDragHelper.create(this, 1.0f, mDragCallback);
@@ -87,16 +153,18 @@ public class SlideToggleView extends FrameLayout {
         mBlockBottomMargin = a.getDimensionPixelSize(
                 R.styleable.SlideToggleView_stv_blockBottomMargin, 4);
         mRemainDistance = a.getDimensionPixelSize(R.styleable.SlideToggleView_stv_remain, 10);
+
         a.recycle();
 
+        LayoutParams textParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+                LayoutParams.WRAP_CONTENT);
+        textParams.gravity = Gravity.CENTER;
         mShimmerTextView = new ShimmerTextView(context);
         mShimmerTextView.setText(text);
         mShimmerTextView.setTextColor(textColor);
         mShimmerTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        LayoutParams textParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                LayoutParams.WRAP_CONTENT);
-        textParams.gravity = Gravity.CENTER;
         addView(mShimmerTextView, textParams);
+
 
         mBlockView = new ImageView(context);
         mBlockView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
@@ -107,7 +175,6 @@ public class SlideToggleView extends FrameLayout {
                 mBlockBottomMargin);
         addView(mBlockView, blockParams);
     }
-
 
     /**
      * 设置文本内容
@@ -193,91 +260,6 @@ public class SlideToggleView extends FrameLayout {
         }
     }
 
-    private ViewDragHelper.Callback mDragCallback = new ViewDragHelper.Callback() {
-        @Override
-        public boolean tryCaptureView(@NonNull View view, int i) {
-            return view == mBlockView;
-        }
-
-        @Override
-        public void onViewCaptured(@NonNull View capturedChild, int activePointerId) {
-            ViewParent parent = capturedChild.getParent();
-            if (parent != null) {
-                parent.requestDisallowInterceptTouchEvent(true);
-            }
-        }
-
-        @Override
-        public int clampViewPositionHorizontal(@NonNull View child, int left, int dx) {
-            int min = getPaddingLeft() + mBlockLeftMargin;
-            if (left < min) {
-                left = min;
-            }
-            int max = getMeasuredWidth() - getPaddingRight() - mBlockRightMargin
-                    - mBlockView.getMeasuredWidth();
-            if (left > max) {
-                left = max;
-            }
-            return left;
-        }
-
-        @Override
-        public int clampViewPositionVertical(@NonNull View child, int top, int dy) {
-            return getPaddingTop() + mBlockTopMargin;
-        }
-
-        @Override
-        public void onViewPositionChanged(@NonNull View changedView, int left, int top, int dx,
-                int dy) {
-            if (mSlideToggleListener != null) {
-                int total =
-                        getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - mBlockLeftMargin
-                                - mBlockRightMargin - mBlockView.getMeasuredWidth();
-                int slide = left - getPaddingLeft() - mBlockLeftMargin;
-                mSlideToggleListener.onBlockPositionChanged(SlideToggleView.this, left, total,
-                        slide);
-            }
-        }
-
-        @Override
-        public void onViewReleased(@NonNull View releasedChild, float xvel, float yvel) {
-            if (releasedChild == mBlockView) {
-                int total =
-                        getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - mBlockLeftMargin
-                                - mBlockRightMargin - mBlockView.getMeasuredWidth();
-                int slide = releasedChild.getLeft() - getPaddingLeft() - mBlockLeftMargin;
-                if (total - slide <= mRemainDistance) {
-                    openToggle();
-
-                    if (mSlideToggleListener != null) {
-                        mSlideToggleListener.onSlideOpen(SlideToggleView.this);
-                    }
-                } else {
-                    int finalLeft = getPaddingLeft() + mBlockLeftMargin;
-                    int finalTop = getPaddingTop() + mBlockTopMargin;
-                    mViewDragHelper.settleCapturedViewAt(finalLeft, finalTop);
-                    invalidate();
-                }
-            }
-        }
-    };
-
-    public interface SlideToggleListener {
-        /**
-         * 滑块位置改变回调
-         *
-         * @param left  滑块左侧位置，值等于{@link #getLeft()}
-         * @param total 滑块可以滑动的总距离
-         * @param slide 滑块已经滑动的距离
-         */
-        void onBlockPositionChanged(SlideToggleView view, int left, int total, int slide);
-
-        /**
-         * 滑动打开
-         */
-        void onSlideOpen(SlideToggleView view);
-    }
-
     /**
      * 设置滑动开关监听器
      *
@@ -306,5 +288,21 @@ public class SlideToggleView extends FrameLayout {
         int finalTop = getPaddingTop() + mBlockTopMargin;
         mViewDragHelper.smoothSlideViewTo(mBlockView, finalLeft, finalTop);
         invalidate();
+    }
+
+    public interface SlideToggleListener {
+        /**
+         * 滑块位置改变回调
+         *
+         * @param left  滑块左侧位置，值等于{@link #getLeft()}
+         * @param total 滑块可以滑动的总距离
+         * @param slide 滑块已经滑动的距离
+         */
+        void onBlockPositionChanged(SlideToggleView view, int left, int total, int slide);
+
+        /**
+         * 滑动打开
+         */
+        void onSlideOpen(SlideToggleView view);
     }
 }
