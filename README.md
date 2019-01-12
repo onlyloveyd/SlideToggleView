@@ -1,3 +1,5 @@
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php) 
+[![](https://jitpack.io/v/onlyloveyd/SlideToggleView.svg)](https://jitpack.io/#onlyloveyd/SlideToggleView)
 # SlideToggleView
 🍎A simple SlideToggleView for Android.
 
