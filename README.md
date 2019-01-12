@@ -59,6 +59,6 @@ dependencies {
 
 ## Basic Result
 ![slidetoggleview](/screenshots/slidetoggleview.gif)
-![demo](/screenshots/demo.png)
+
 
 
