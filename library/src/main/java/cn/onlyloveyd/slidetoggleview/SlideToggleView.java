@@ -21,7 +21,7 @@ import cn.onlyloveyd.slidetoggleview.shimmer.ShimmerTextView;
 /**
  * 滑动开关
  *
- * @author jiang（jiangyj@gz.csg.cn）
+ * @author jiang
  * @date 2019/1/7
  */
 public class SlideToggleView extends FrameLayout {
