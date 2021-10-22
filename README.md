@@ -18,7 +18,7 @@ allprojects {
 **Step 2.** Add the dependency
 ```groovy
 dependencies {
-    iimplementation 'com.github.onlyloveyd:SlideToggleView:1.0'
+    implementation 'com.github.onlyloveyd:SlideToggleView:1.0'
 }
 ```
 
